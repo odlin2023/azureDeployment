@@ -241,41 +241,53 @@ public class TicketController {
     }
 
 
-    @GetMapping("/employee-dashboard")
+    @GetMapping("/employeeDashboard")
     public String showEmployeeDashboard(Model model) {
         Iterable<Ticket> tickets = ticketService.getAllTickets();
         model.addAttribute("tickets", tickets);
-        model.addAttribute("tickets", new Ticket());
+
+        // Adding counts of tickets based on their status
+        Long openTickets = ticketService.countTicketsByStatus("open");
+        Long inProgressTickets = ticketService.countTicketsByStatus("in progress");
+        Long closedTickets = ticketService.countTicketsByStatus("closed");
+
+        model.addAttribute("openTickets", openTickets);
+        model.addAttribute("inProgressTickets", inProgressTickets);
+        model.addAttribute("closedTickets", closedTickets);
+
+        // You should use a different attribute name if you want to add a new Ticket instance
+        model.addAttribute("newTicket", new Ticket());
+
         return "/employeeDashboard"; // the name of your Thymeleaf template
     }
 
 
     @PostMapping("/login")
     public String loginSubmit(@ModelAttribute NewEmployee newEmployee, HttpServletRequest request, RedirectAttributes redirectAttributes) {
-        if (newEmployee.getRoles() != null && !newEmployee.getRoles().isEmpty()) {
-            List<NewEmployee> employeesWithRole = newEmployeeService.findByRole(newEmployee.getRoles().iterator().next());
+        NewEmployee existing = newEmployeeService.findByUsername(newEmployee.getUsername());
 
-            NewEmployee existing = employeesWithRole.stream()
-                    .filter(e -> e.getUsername().equals(newEmployee.getUsername()))
-                    .findFirst()
-                    .orElse(null);
+        if (existing != null && existing.getPassword().equals(newEmployee.getPassword())) {
+            // Log the user's roles
+            System.out.println("User roles: " + existing.getRoles());
 
-            if (existing != null && existing.getPassword().equals(newEmployee.getPassword())) {
-                // Set up user session
-                HttpSession session = request.getSession();
-                session.setAttribute("newEmployee", existing);
+            // Set up user session
+            HttpSession session = request.getSession();
+            session.setAttribute("newEmployee", existing);
 
-                if (existing.getRoles().contains("Ad")) {
-                    return "redirect:/tickets";
-                } else if (existing.getRoles().contains("Us")) {
-                    return "redirect:/employeeDashboard";
-                }
+            if (existing.getRoles().stream().anyMatch(role -> role.toUpperCase().equals("ADMIN"))) {
+                System.out.println("Redirecting to /tickets");
+                return "redirect:/tickets";
+            } else if (existing.getRoles().stream().anyMatch(role -> role.toUpperCase().equals("USER"))) {
+                System.out.println("Redirecting to /employeeDashboard");
+                return "redirect:/employeeDashboard";
             }
         }
 
         redirectAttributes.addFlashAttribute("error", "Invalid username or password");
         return "redirect:/login";
     }
+
+
 
 }
 

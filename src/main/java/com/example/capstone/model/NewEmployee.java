@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -15,7 +16,6 @@ import java.util.Set;
 @Table(name = "new_employee")
 @Getter
 @Setter
-@NoArgsConstructor
 public class NewEmployee {
 
     @Id
@@ -42,10 +42,19 @@ public class NewEmployee {
     private String description;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<String> roles = new HashSet<>();
+    private List<String> roles;
 
-    public Set<String> getRoles() {
+    public List<String> getRoles() {
         return roles;
+    }
+
+    public NewEmployee(String username, String password, List<String> roles) {
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    public NewEmployee() {
     }
 
 

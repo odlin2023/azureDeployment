@@ -232,7 +232,6 @@
                     <tr th:each="ticket : ${tickets}">
                         <td th:text="${ticket.id}"></td>
                         <td><span class="badge badge-danger"><i class="fas fa-circle"></i> <span th:text="${ticket.status}"></span></span></td>
-                        <td th:text="${ticket.name}"></td>
                         <td th:text="${ticket.assignedTickets}"></td>
                         <td th:text="${ticket.Description}"></td>
 
