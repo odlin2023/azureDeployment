@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title>Registration</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --clr-light-bg: #d7ddeb;
+      --clr-light-gray: #888595;
+      --clr-primary: #4B0082; /* Dark purple color */
+      --clr-purple: #8B008B;
+    }
+
+    /* your CSS styles go here... */
+
+  </style>
+</head>
+
+<body>
+<!-- Nav Bar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#" th:href="@{/}">Website Name</a>
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#" th:href="@{/home}">Home</a>
+      </li>
+      <!-- Add more items here -->
+    </ul>
+  </div>
+</nav>
+
+<!-- Your Form and Other Elements -->
+<div class="container">
+  <h2>Registration Form</h2>
+  <form action="#" th:action="@{/registration}" th:object="${newEmployee}" method="post">
+    <div class="form-group">
+      <label for="username">Username:</label>
+      <input type="text" class="form-control" id="username" placeholder="Enter username" th:field="*{username}">
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="Enter email" th:field="*{email}">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="pwd" placeholder="Enter password" th:field="*{password}">
+    </div>
+    <div class="form-group">
+      <label for="confirmPwd">Confirm Password:</label>
+      <input type="password" class="form-control" id="confirmPwd" placeholder="Confirm password" th:field="*{confirmed_password}">
+    </div>
+    <div class="form-group">
+      <label for="firstName">First Name:</label>
+      <input type="text" class="form-control" id="firstName" placeholder="Enter first name" th:field="*{firstName}">
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name:</label>
+      <input type="text" class="form-control" id="lastName" placeholder="Enter last name" th:field="*{lastName}">
+    </div>
+    <div class="form-group">
+      <label for="role">Role:</label>
+      <select class="form-control" id="role" th:field="*{role}">
+        <option value="">Select a role</option>
+        <option value="Admin">Admin</option>
+        <option value="User">Employee</option>
+        <!-- Add as many options as you need -->
+      </select>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
