@@ -1,25 +1,26 @@
-name: Build and deploy JAR app to Azure Web App
+name: Build and deploy JAR app to Azure Web App - FirstWebApp1234567
 
 on:
   push:
     branches:
-      - main
+      - master
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Set up Java version
         uses: actions/setup-java@v1
         with:
-          java-version: '17'  # Update to the desired Java version
+          java-version: '17'
 
       - name: Build with Maven
-        run: mvn clean package  # This will create the JAR file in the target directory
+        run: mvn clean install
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -32,6 +33,7 @@ jobs:
     needs: build
     environment:
       name: 'Production'
+      url: 'https://firstwebapp1234567.azurewebsites.net'
 
     steps:
       - name: Download artifact from build job
@@ -40,6 +42,7 @@ jobs:
           name: java-app
 
       - name: Deploy to Azure Web App
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'firstWebApp1234567'  # Replace with your actual Azure Web App name
