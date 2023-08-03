@@ -7,8 +7,7 @@ name: Build and deploy JAR app to Azure Web App - FirstWebApp1234567
 on:
   push:
     branches:
-      - main
-      - any
+      - master
   workflow_dispatch:
 
 jobs:
@@ -30,13 +29,13 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: java-app
+          name: firstWebApp1234567
           path: '${{ github.workspace }}/target/*.jar'
 
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: java-app
+          name: firstWebApp1234567
 
       - name: Deploy JAR to Azure Web App
         id: deploy-to-webapp-jar
