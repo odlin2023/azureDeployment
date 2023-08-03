@@ -21,6 +21,15 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    - name: Install Azure CLI
+      run: |
+        sudo apt-get update
+        sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
+        curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
+        echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
+        sudo apt-get update
+        sudo apt-get install azure-cli
+
     - name: Azure CLI Action
       uses: Azure/cli@v1.0.7
       with:
