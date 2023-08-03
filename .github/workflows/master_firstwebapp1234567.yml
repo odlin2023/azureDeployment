@@ -6,8 +6,6 @@ name: Build and deploy JAR app to Azure Web App - firstWebApp1234567
 on:
   push:
     branches:
-      - main
-      - any
       - master
   workflow_dispatch:
 
