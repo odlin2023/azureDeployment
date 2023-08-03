@@ -1,6 +1,8 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
+
+
 name: Build and Deploy to Azure
 
 on:
@@ -30,12 +32,8 @@ jobs:
         sudo apt-get update
         sudo apt-get install azure-cli
 
-    - name: Azure CLI Action
-      uses: Azure/cli@v1.0.7
-      with:
-        azcliversion: latest
-        inlineScript: |
-          az --version
+    - name: Check Azure CLI version
+      run: az --version
 
     - name: Login to Azure
       uses: azure/login@v1
@@ -52,3 +50,4 @@ jobs:
         slot-name: 'production' 
         publish-profile: '${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}' 
         package: '${{ github.workspace }}/target/demo-0.0.1-SNAPSHOT.jar'
+
