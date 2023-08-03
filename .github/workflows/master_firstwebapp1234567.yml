@@ -25,14 +25,13 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Copy .mvn directory
+      - name: Copy Capstone Eclipse directory
         run: |
-          cp -r 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\.mvn' $HOME/.mvn
           cp -r 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse' 'C:\Users\odlin\Desktop\Deploy5\Capstone Eclipse'
 
       - name: Build with Maven
-        run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
-        working-directory: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse'
+        run: mvn -f 'C:\Users\odlin\Desktop\Deploy5\Capstone Eclipse\pom.xml' clean install
+        working-directory: 'C:\Users\odlin\Desktop\Deploy5\Capstone Eclipse'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -62,3 +61,4 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6483164BBCFB405B81AE0543E139F4E3 }}
           # Make sure to use the correct publish profile secret.
           package: '*.jar'
+
