@@ -1,7 +1,6 @@
 package com.example.capstone.services;
 
 
-import com.example.capstone.exceptions.DuplicateDescriptionException;
 import com.example.capstone.model.NewEmployee;
 import com.example.capstone.repository.NewEmployeeRepository;
 import com.example.capstone.repository.UserRepository;
@@ -50,25 +49,10 @@ public class NewEmployeeService {
 
 
 
-    private boolean descriptionExists(String description) {
-        return newEmployeeRepository.findByDescription(description).isPresent();
-    }
-
-
-
-    public NewEmployee registerNewEmployee(NewEmployee newEmployee) {
-        // Optional: If description is null or empty, set it to an empty string
-        if (newEmployee.getDescription() == null) {
-            newEmployee.setDescription("");
-        }
-
-        // Save the employee record
-        return newEmployeeRepository.save(newEmployee);
-    }
 
 
     public List<NewEmployee> findByRole(String role) {
-        return newEmployeeRepository.findByRolesContains(role);
+        return newEmployeeRepository.findByRoleContains(role);
     }
 
     public NewEmployee findByUsername(String username) {
@@ -77,10 +61,27 @@ public class NewEmployeeService {
                 new NewEmployee(
                         rs.getString("username"),
                         rs.getString("password"),
-                        Collections.singletonList(rs.getString("role"))
+                        rs.getString("role") // Retrieve the role as String
                 ));
         return employees.isEmpty() ? null : employees.get(0);
     }
+    
+    public void saveNewEmployee(NewEmployee newEmployee) {
+        // Set a default role if required
+        if (newEmployee.getRole() == null) {
+            newEmployee.setRole("USER");
+        }
+
+        newEmployeeRepository.save(newEmployee);
+    }
+
+
+    public NewEmployee registerNewEmployee(NewEmployee newEmployee) {
+        return newEmployeeRepository.save(newEmployee);
+    }
+
+
+
 
 
 

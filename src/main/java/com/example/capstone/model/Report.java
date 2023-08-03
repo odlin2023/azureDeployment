@@ -16,7 +16,5 @@ public class Report {
     private String subject;
     private String message;
 
-    // Constructors (Lombok generates default constructor automatically)
 
-    // Lombok generates getters and setters automatically
 }

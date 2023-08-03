@@ -1,5 +1,6 @@
 package com.example.capstone.repository;
 
+import com.example.capstone.model.NewEmployee;
 import com.example.capstone.model.Ticket;
 import jakarta.persistence.NamedQuery;
 import org.springframework.data.jdbc.repository.query.Modifying;
@@ -17,6 +18,7 @@ import java.util.List;
         query = "SELECT t FROM Ticket t WHERE t.name LIKE :name"
 )
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
+
     Long countByStatus(String status);
 
     List<Ticket> findByNameContaining(String name);
@@ -32,6 +34,9 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     @Transactional
     @Modifying
     void deleteByIdIn(List<Long> ids);
+    @Query("SELECT t FROM Ticket t WHERE t.newEmployee.name LIKE %:name%")
+    List<Ticket> findByNewEmployee_NameContaining(@Param("name") String name);
+
 
 
 }

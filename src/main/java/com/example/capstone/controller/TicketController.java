@@ -5,6 +5,7 @@ import com.example.capstone.model.Message;
 import com.example.capstone.model.NewEmployee;
 import com.example.capstone.model.Report;
 import com.example.capstone.model.Ticket;
+import com.example.capstone.repository.NewEmployeeRepository;
 import com.example.capstone.repository.TicketRepository;
 import com.example.capstone.services.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -21,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -43,17 +44,21 @@ public class TicketController {
     @Autowired
     private final AuthenticationService authenticationService;
 
+    @Autowired
+    private final NewEmployeeRepository newEmployeeRepository;
+
 
 
 
     @Autowired
-    public TicketController(TicketService ticketService, TicketRepository ticketRepository, NewEmployeeService newEmployeeService, ReportService reportService, CurrentUserService currentUserService, AuthenticationService authenticationService) {
+    public TicketController(TicketService ticketService, TicketRepository ticketRepository, NewEmployeeService newEmployeeService, ReportService reportService, CurrentUserService currentUserService, AuthenticationService authenticationService, NewEmployeeRepository newEmployeeRepository) {
         this.ticketService = ticketService;
         this.ticketRepository = ticketRepository;
         this.newEmployeeService=newEmployeeService;
         this.reportService = reportService;
         this.currentUserService = currentUserService;
         this.authenticationService = authenticationService;
+        this.newEmployeeRepository = newEmployeeRepository;
     }
 
 
@@ -241,24 +246,37 @@ public class TicketController {
     }
 
 
+
     @GetMapping("/employeeDashboard")
-    public String showEmployeeDashboard(Model model) {
-        Iterable<Ticket> tickets = ticketService.getAllTickets();
+    public String getDashboardInfo(Model model, HttpServletRequest request, Principal principal) {
+        NewEmployee newEmployee = null;
+        String name = null;
+
+        // Get the newEmployee from the session, if possible
+        HttpSession session = request.getSession();
+        if (session != null) {
+            newEmployee = (NewEmployee) session.getAttribute("newEmployee");
+            if (newEmployee != null) {
+                name = newEmployee.getName();
+            }
+        }
+
+        // If no session or no newEmployee in session, try getting newEmployee from Principal
+        if (newEmployee == null && principal != null) {
+            name = principal.getName();
+            newEmployee = newEmployeeRepository.findByUsername(name);
+        }
+
+        if (newEmployee == null) {
+            // The user is not logged in. Redirect to login page.
+            return "redirect:/login";
+        }
+
+        List<Ticket> tickets = ticketRepository.findByNewEmployee_NameContaining(name);
+        model.addAttribute("newEmployee", newEmployee);
         model.addAttribute("tickets", tickets);
-
-        // Adding counts of tickets based on their status
-        Long openTickets = ticketService.countTicketsByStatus("open");
-        Long inProgressTickets = ticketService.countTicketsByStatus("in progress");
-        Long closedTickets = ticketService.countTicketsByStatus("closed");
-
-        model.addAttribute("openTickets", openTickets);
-        model.addAttribute("inProgressTickets", inProgressTickets);
-        model.addAttribute("closedTickets", closedTickets);
-
-        // You should use a different attribute name if you want to add a new Ticket instance
-        model.addAttribute("newTicket", new Ticket());
-
-        return "/employeeDashboard"; // the name of your Thymeleaf template
+        model.addAttribute("role", newEmployee.getRole());  // Add the role to the model
+        return "employeeDashboard";
     }
 
 
@@ -268,16 +286,17 @@ public class TicketController {
 
         if (existing != null && existing.getPassword().equals(newEmployee.getPassword())) {
             // Log the user's roles
-            System.out.println("User roles: " + existing.getRoles());
+            System.out.println("User roles: " + existing.getRole());
 
             // Set up user session
             HttpSession session = request.getSession();
             session.setAttribute("newEmployee", existing);
 
-            if (existing.getRoles().stream().anyMatch(role -> role.toUpperCase().equals("ADMIN"))) {
+            String role = existing.getRole().strip().toUpperCase();
+            if (role.equals("ADMIN")) {
                 System.out.println("Redirecting to /tickets");
                 return "redirect:/tickets";
-            } else if (existing.getRoles().stream().anyMatch(role -> role.toUpperCase().equals("USER"))) {
+            } else if (role.equals("USER")) {
                 System.out.println("Redirecting to /employeeDashboard");
                 return "redirect:/employeeDashboard";
             }
@@ -285,6 +304,38 @@ public class TicketController {
 
         redirectAttributes.addFlashAttribute("error", "Invalid username or password");
         return "redirect:/login";
+    }
+
+    @GetMapping("/admin")
+    public String getAdminDashboard(Model model, HttpServletRequest request, Principal principal) {
+        Ticket ticket = null;
+        String name = null;
+
+        // Get the ticket from the session, if possible
+        HttpSession session = request.getSession();
+        if (session != null) {
+            ticket = (Ticket) session.getAttribute("ticket");
+            if (ticket != null) {
+                name = ticket.getName();
+            }
+        }
+
+        // If no session or no ticket in session, try getting ticket from Principal
+        if (ticket == null && principal != null) {
+            name = principal.getName();
+            ticket = ticketRepository.findByName(name);
+        }
+
+        if (ticket == null) {
+            // The user is not logged in. Redirect to the login page.
+            return "redirect:/login";
+        }
+
+        List<Ticket> tickets = ticketRepository.findByNameContaining(name);
+        model.addAttribute("ticket", ticket);
+        model.addAttribute("tickets", tickets);
+        model.addAttribute("role", ticket.getName()); // Add the role to the model
+        return "tickets";
     }
 
 

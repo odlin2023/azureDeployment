@@ -25,7 +25,6 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(NewEmployee newEmployee) {
         this.username = newEmployee.getUsername();
         this.password = newEmployee.getPassword();
-        // Set authorities based on newEmployee roles/permissions if needed
     }
 
     public CustomUserDetails(User newEmployee) {
