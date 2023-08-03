@@ -10,7 +10,7 @@ name: Build and deploy JAR app to Azure Web App - firstWebApp1234567
 on:
   push:
     branches:
-      - master
+      - main
   workflow_dispatch:
 
 jobs:
@@ -57,4 +57,5 @@ jobs:
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6483164BBCFB405B81AE0543E139F4E3 }}
           # Make sure to use the correct publish profile secret.
           package: '*.jar'
+
 
