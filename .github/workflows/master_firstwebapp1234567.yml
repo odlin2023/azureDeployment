@@ -25,6 +25,11 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET}}
+
     - name: Build with Maven
       run: mvn clean install
 
@@ -35,4 +40,3 @@ jobs:
         slot-name: 'production' 
         publish-profile: '${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}' 
         package: '${{ github.workspace }}/target/demo-0.0.1-SNAPSHOT.jar'
-
