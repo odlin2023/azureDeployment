@@ -28,6 +28,7 @@ jobs:
       - name: Copy .mvn directory
         run: |
           cp -r 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\.mvn' $HOME/.mvn
+          cp -r 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse' 'C:\Users\odlin\Desktop\Deploy5\Capstone Eclipse'
 
       - name: Build with Maven
         run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
