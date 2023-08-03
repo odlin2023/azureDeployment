@@ -26,13 +26,11 @@ jobs:
         run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
         working-directory: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse'
 
-- name: Upload Artifact
-  uses: actions/upload-artifact@v2
-  with:
-    name: java-app
-    path: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse/target/*.jar'
-     
-
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-app
+          path: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse/target/*.jar'
 
   deploy:
     runs-on: windows-latest
