@@ -6,6 +6,8 @@ name: Build and deploy WAR app to Azure Web App - firstWebApp1234567
 on:
   push:
     branches:
+      - main
+      - any
       - master
   workflow_dispatch:
 
@@ -19,16 +21,19 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v1
         with:
-          java-version: '17'
+          java-version: '8'
+          # If you need Java 17, uncomment the line below
+          # java-version: '17'
 
       - name: Build with Maven
         run: mvn clean install
+        # Assuming Maven is properly configured in the project directory.
 
-      - name: Upload artifact for deployment job
+      - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: windows-latest
@@ -47,7 +52,8 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'firstWebApp1234567'
+          app-name: 'firstWebApp1234567'  # Replace with your actual Azure Web App name
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_DD6D77620DBE4421B9BAA9CF03B4BC96 }}
-          package: '*.war'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6483164BBCFB405B81AE0543E139F4E3 }}
+          # Make sure to use the correct publish profile secret.
+          package: '*.jar'
