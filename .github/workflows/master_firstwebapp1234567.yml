@@ -1,16 +1,18 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy WAR app to Azure Web App - FirstWebApp1234567
+# Workflow for building and deploying JAR app
+name: Build and deploy JAR app to Azure Web App - FirstWebApp1234567
 
 on:
   push:
     branches:
-      - master
+      - main
+      - any
   workflow_dispatch:
 
 jobs:
-  build:
+  build-deploy-jar:
     runs-on: windows-latest
 
     steps:
@@ -19,35 +21,29 @@ jobs:
       - name: Set up Java version
         uses: actions/setup-java@v1
         with:
-          java-version: '17'
+          java-version: '8'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
+        working-directory: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse'
 
-      - name: Upload artifact for deployment job
+      - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.war'
+          path: '${{ github.workspace }}/target/*.jar'
 
-  deploy:
-    runs-on: windows-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
-    steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
           name: java-app
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
+      - name: Deploy JAR to Azure Web App
+        id: deploy-to-webapp-jar
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'FirstWebApp1234567'
+          app-name: 'firstWebApp1234567'  # Replace with your actual Azure Web App name
           slot-name: 'Production'
-          publish-profile: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET }}
-          package: '*.war'
+          publish-profile: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET}}
+          # Make sure to use the correct publish profile secret.
+          package: '*.jar'
