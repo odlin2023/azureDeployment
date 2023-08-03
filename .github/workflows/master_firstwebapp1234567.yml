@@ -8,7 +8,6 @@ on:
     branches:
       - main
       - any
-      - master
   workflow_dispatch:
 
 jobs:
@@ -22,26 +21,22 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '8'
-          # If you need Java 17, uncomment the line below
-          # java-version: '17'
 
       - name: Build with Maven
-        run: mvn clean install
-        # Assuming Maven is properly configured in the project directory.
+        run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
+        working-directory: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\target\*.jar'
 
   deploy:
     runs-on: windows-latest
     needs: build
     environment:
       name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
