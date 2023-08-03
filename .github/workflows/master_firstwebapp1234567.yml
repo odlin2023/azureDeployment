@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy WAR app to Azure Web App - firstWebApp1234567
+name: Build and deploy WAR app to Azure Web App - FirstWebApp1234567
 
 on:
   push:
@@ -47,7 +47,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'firstWebApp1234567'
+          app-name: 'FirstWebApp1234567'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_22BFA1DEFB45496B92970392EF15D8B8 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AE0D24E6ACE74B63B29BB4CA0BD3B7FF }}
           package: '*.war'
