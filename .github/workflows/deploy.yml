@@ -1,5 +1,4 @@
-name: Build and deploy JAR app to Azure Web App - firstWebApp1234567
-
+name : Build and deploy JAR app to Azure Web App - FirstWebApp1234567
 on:
   push:
     branches:
