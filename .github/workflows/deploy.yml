@@ -1,9 +1,10 @@
-name: Build and deploy JAR app to Azure Web App - FirstWebApp1234567
+name: Build and deploy JAR app to Azure Web App - firstWebApp1234567
 
 on:
   push:
     branches:
-      - master
+      - main
+      - any
   workflow_dispatch:
 
 jobs:
@@ -11,16 +12,16 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
       - name: Set up Java version
         uses: actions/setup-java@v1
         with:
-          java-version: '17'
+          java-version: '8'
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
+        working-directory: 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
@@ -47,5 +48,6 @@ jobs:
         with:
           app-name: 'firstWebApp1234567'  # Replace with your actual Azure Web App name
           slot-name: 'Production'
-          publish-profile: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6483164BBCFB405B81AE0543E139F4E3 }}
+          # Make sure to use the correct publish profile secret.
           package: '*.jar'
