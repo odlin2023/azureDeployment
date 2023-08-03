@@ -4,6 +4,7 @@
 # Workflow for building and deploying JAR app
 
 
+
 name: Build and deploy JAR app to Azure Web App - firstWebApp1234567
 
 on:
@@ -26,8 +27,7 @@ jobs:
 
       - name: Copy .mvn directory
         run: |
-          mkdir -p $HOME/.mvn
-          cp -r C:\Users\odlin\Desktop\Deploy5\ eclipse\Capstone\ Eclipse\.mvn $HOME/.mvn
+          cp -r 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\.mvn' $HOME/.mvn
 
       - name: Build with Maven
         run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
