@@ -2,16 +2,19 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 # Workflow for building and deploying JAR app
-name: Build and deploy JAR app to Azure Web App - FirstWebApp1234567
+
+
+name: Build and deploy JAR app to Azure Web App - firstWebApp1234567
 
 on:
   push:
     branches:
-      - master
+      - main
+      - any
   workflow_dispatch:
 
 jobs:
-  build-deploy-jar:
+  build:
     runs-on: windows-latest
 
     steps:
@@ -21,6 +24,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '17'
+
+      - name: Copy .mvn directory
+        run: |
+          mkdir -p $HOME/.mvn
+          cp -r C:\Users\odlin\Desktop\Deploy5\ eclipse\Capstone\ Eclipse\.mvn $HOME/.mvn
 
       - name: Build with Maven
         run: mvn -f 'C:\Users\odlin\Desktop\Deploy5 eclipse\Capstone Eclipse\pom.xml' clean install
@@ -32,17 +40,25 @@ jobs:
           name: java-app
           path: '${{ github.workspace }}/target/*.jar'
 
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: 'https://firstwebapp1234567.azurewebsites.net'
+
+    steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
           name: java-app
 
-      - name: Deploy JAR to Azure Web App
-        id: deploy-to-webapp-jar
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'firstWebApp1234567'  # Replace with your actual Azure Web App name
           slot-name: 'Production'
-          publish-profile: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET}}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6483164BBCFB405B81AE0543E139F4E3 }}
           # Make sure to use the correct publish profile secret.
           package: '*.jar'
