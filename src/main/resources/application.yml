@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:sqlserver://firstserver123.database.windows.net;database=FisrtApp-DB;encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+    username: odlinMontila
+    password: Jessicadaniel1.
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+
+
+
+

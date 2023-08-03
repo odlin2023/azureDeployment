@@ -13,12 +13,9 @@ public interface NewEmployeeRepository extends JpaRepository<NewEmployee, Long> 
 
     NewEmployee findByEmail(String email);
 
-    Optional<NewEmployee> findByDescription(String description);
-
-    List<NewEmployee> findByRolesContains(String role);
+    List<NewEmployee> findByRoleContains(String role);
 
 
 
-    // NewEmployee findByUniqueIdentifier(String uniqueIdentifier);
-    // Remove this line or add a field called uniqueIdentifier in the NewEmployee class
+
 }

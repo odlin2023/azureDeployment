@@ -1,6 +1,7 @@
 package com.example.capstone.services;
 
 
+import com.example.capstone.model.NewEmployee;
 import com.example.capstone.model.Ticket;
 import com.example.capstone.repository.NewEmployeeRepository;
 import com.example.capstone.repository.TicketRepository;
@@ -75,6 +76,10 @@ public class TicketService {
 
     public void deleteTickets(List<Long> ids) {
         ticketRepository.deleteByIdIn(ids);
+    }
+    
+    public List<NewEmployee> getEmployeesByRole(String role) {
+        return newEmployeeRepository.findByRoleContains(role);
     }
 
 

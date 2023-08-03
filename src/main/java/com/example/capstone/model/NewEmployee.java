@@ -1,26 +1,17 @@
 package com.example.capstone.model;
 
-
-
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 
 @Entity
 @Table(name = "new_employee")
-@Getter
-@Setter
 public class NewEmployee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;  // Changed type from int to Long
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -31,32 +22,85 @@ public class NewEmployee {
     @Column(nullable = false)
     private String confirmed_password;
 
-    @Column(nullable = false)
-    private String firstName;
-
-    @Column(nullable = false)
-    private String lastName;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     private String email;
 
-    private String description;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> roles;
+    private String role;
 
-    public List<String> getRoles() {
-        return roles;
-    }
 
-    public NewEmployee(String username, String password, List<String> roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
 
     public NewEmployee() {
     }
 
+    public NewEmployee(String username, String password, String role) {
+        this.username = username;
+        this.password = password;
+        this.role=role;
+    }
 
+    // Getters
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getConfirmed_password() {
+        return confirmed_password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+
+    public String getEmail() {
+        return email;
+    }
+
+
+
+    // Setters
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setConfirmed_password(String confirmed_password) {
+        this.confirmed_password = confirmed_password;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
 }
-
