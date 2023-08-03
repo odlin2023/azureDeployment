@@ -24,6 +24,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+    
+    - name: Install Azure CLI
+      run: |
+        Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -Wait -ArgumentList '/I AzureCLI.msi /quiet'; rm .\AzureCLI.msi
+        az --version
 
     - name: Login to Azure
       uses: azure/login@v1
