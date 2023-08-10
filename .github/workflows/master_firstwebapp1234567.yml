@@ -1,40 +1,53 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-
-name: Deploy JAR to Azure App Service
+name: Build and deploy WAR app to Azure Web App - FirstWebApp1234567
 
 on:
   push:
     branches:
-      - main # Change this to your main branch name
+      - master
+  workflow_dispatch:
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Java
-      uses: actions/setup-java@v2
-      with:
-        java-version: '17' # Use Java 17
+      - name: Set up Java version
+        uses: actions/setup-java@v1
+        with:
+          java-version: '17'
 
-    - name: Install xmlstarlet
-      run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+      - name: Build with Maven
+        run: mvn clean install
 
-    - name: Build JAR with Java 17
-      run: |
-        ./gradlew build # Modify this to your build command
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v2
+        with:
+          name: java-app
+          path: '${{ github.workspace }}/target/*.war'
 
-    - name: Run Deployment Script
-      run: |
-        bash $GITHUB_WORKSPACE/.github/scripts/deploy.sh
-        
-env:
-  GITHUB_WORKSPACE: ${{ github.workspace }}
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: java-app
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'FirstWebApp1234567'
+          slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_90FD52025F5D472CBAEEF6BE0D21CEFA }}
+          package: '*.war'
