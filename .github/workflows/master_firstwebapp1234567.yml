@@ -27,11 +27,9 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    # Install xmlstarlet
     - name: Install xmlstarlet
       run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
-    # Begin Dependency Upgrade using xmlstarlet
     - name: Upgrade TestNG version
       run: |
         xmlstarlet ed -L -u "//dependencies/dependency[groupId='org.testng' and artifactId='testng']/version" -v "7.4.0" pom.xml
@@ -62,7 +60,7 @@ jobs:
       id: deploy-to-webapp
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'FirstWebApp1234567' # Adjusted to use your provided App Service name
+        app-name: 'FirstWebApp1234567'
         slot-name: 'Production'
-        publish-profile: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET }} # Make sure to replace this with the name of your GitHub secret.
+        publish-profile: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET }}
         package: '*.jar'
