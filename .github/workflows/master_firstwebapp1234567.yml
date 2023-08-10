@@ -5,49 +5,33 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 
-name: Build and Deploy to Azure
+name: Deploy JAR to Azure App Service
 
 on:
   push:
     branches:
-      - master
+      - main # Change this to your main branch name
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Set up Java 1.17
+    - name: Set up Java
       uses: actions/setup-java@v2
       with:
-        java-version: '17'
-        distribution: 'adopt'
+        java-version: '17' # Use Java 17
 
-    - name: Install Azure CLI
+    - name: Build JAR with Java 17
       run: |
-        sudo apt-get update
-        sudo apt-get install ca-certificates curl apt-transport-https lsb-release gnupg
-        curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/microsoft.gpg > /dev/null
-        echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
-        sudo apt-get update
-        sudo apt-get install azure-cli
-    - name: Check Azure CLI version
-      run: az --version
+        ./gradlew build # Modify this to your build command
 
-    - name: Login to Azure
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-    - name: Build with Maven
-      run: mvn clean install
-
-    - name: 'Deploy to Azure WebApp'
-      uses: azure/webapps-deploy@v2
-      with: 
-        app-name: 'FirstWebApp1234567'
-        slot-name: 'production' 
-        publish-profile: '${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}' 
-        package: '${{ github.workspace }}/target/Capstone-0.0.1-SNAPSHOT.jar'
+    - name: Run Deployment Script
+      run: |
+        bash $GITHUB_WORKSPACE/.github/scripts/deploy.sh
+        
+env:
+  GITHUB_WORKSPACE: ${{ github.workspace }}
