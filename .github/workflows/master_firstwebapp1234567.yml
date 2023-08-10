@@ -6,12 +6,12 @@
 
 
 
-name: Build and deploy WAR app to Azure Web App - FirstWebApp1234567
+name: Deploy to Azure
 
 on:
   push:
     branches:
-      - master
+      - master # adjust this if you want it for 'main' or any other branch.
   workflow_dispatch:
 
 jobs:
@@ -19,21 +19,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Java version
-        uses: actions/setup-java@v1
-        with:
-          java-version: '17'
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        java-version: '17'
+        distribution: 'adopt'
 
-      - name: Build with Maven
-        run: mvn clean install
+    - name: Build with Maven
+      run: mvn clean install
 
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
-        with:
-          name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v2
+      with:
+        name: java-app
+        path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,16 +45,17 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: java-app
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v2
+      with:
+        name: java-app
 
-      - name: Deploy to Azure Web App
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'FirstWebApp1234567'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_29A1C76951A74E1C94726118323C82C0 }}
-          package: '*.jar'
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'FirstWebApp1234567' # Adjusted to use your provided App Service name
+        slot-name: 'Production'
+        publish-profile: ${{ secrets.YOUR_PUBLISH_PROFILE_SECRET }} # Make sure to replace this with the name of your GitHub secret.
+        package: '*.jar'
+
