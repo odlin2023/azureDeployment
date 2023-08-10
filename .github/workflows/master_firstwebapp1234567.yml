@@ -5,7 +5,6 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
 
-
 name: Deploy to Azure
 
 on:
@@ -27,6 +26,10 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+
+    # Install xmlstarlet
+    - name: Install xmlstarlet
+      run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
     # Ensure Maven Compiler Plugin uses JDK 17
     - name: Update Maven Compiler Plugin for JDK 17
