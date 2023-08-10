@@ -28,11 +28,12 @@ jobs:
         java-version: '17'
         distribution: 'adopt'
 
-    # Begin Dependency Upgrade
-    - name: Upgrade TestNG version
+    # Ensure Maven Compiler Plugin uses JDK 17
+    - name: Update Maven Compiler Plugin for JDK 17
       run: |
-        xmlstarlet ed -L -u "//dependencies/dependency[groupId='org.testng' and artifactId='testng']/version" -v "7.4.0" pom.xml
-    # End Dependency Upgrade
+        xmlstarlet ed -L \
+          -u "//build/plugins/plugin[groupId='org.apache.maven.plugins' and artifactId='maven-compiler-plugin']/configuration/release" \
+          -v '17' pom.xml
 
     - name: Build with Maven
       run: mvn clean install
