@@ -21,8 +21,11 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Build with Maven
-        run: mvn clean install
+      - name: Make Maven Wrapper Executable
+        run: chmod +x .mvn/wrapper/mvnw
+
+      - name: Build with Maven Wrapper
+        run: .mvn/wrapper/mvnw clean install
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
