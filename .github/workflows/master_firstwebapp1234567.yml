@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar' # Change to JAR files
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: windows-latest
@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'FirstWebApp1234567'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_90FD52025F5D472CBAEEF6BE0D21CEFA }}
-          package: '*.jar' # Change to JAR files
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_ED313DAFA3ED4241821E5E2B243E0A83 }}
+          package: '*.jar'
