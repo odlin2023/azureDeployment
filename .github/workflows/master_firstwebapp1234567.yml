@@ -31,12 +31,10 @@ jobs:
     - name: Install xmlstarlet
       run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
-    # Ensure Maven Compiler Plugin uses JDK 17
-    - name: Update Maven Compiler Plugin for JDK 17
+    # Begin Dependency Upgrade using xmlstarlet
+    - name: Upgrade TestNG version
       run: |
-        xmlstarlet ed -L \
-          -u "//build/plugins/plugin[groupId='org.apache.maven.plugins' and artifactId='maven-compiler-plugin']/configuration/release" \
-          -v '17' pom.xml
+        xmlstarlet ed -L -u "//dependencies/dependency[groupId='org.testng' and artifactId='testng']/version" -v "7.4.0" pom.xml
 
     - name: Build with Maven
       run: mvn clean install
